@@ -12,7 +12,7 @@ conn = psycopg2.connect(
 cursor = conn.cursor()
 
 try:
-    cursor.execute("SELECT * FROM newtable")
+    cursor.execute("SELECT * FROM product")
     row = cursor.fetchall()
     print(row)
 except Exception as error:

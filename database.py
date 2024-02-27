@@ -1,8 +1,7 @@
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, relationship
-from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime
-from datetime import datetime
+from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Integer, String, ForeignKey
 import psycopg2
 
 
@@ -10,14 +9,16 @@ SQLALCHEMY_DATABASE_URL = "postgresql://postgres:123456@localhost/store"
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
-Base = declarative_base()
+class Base(DeclarativeBase): pass
 
 
 class Product(Base):
 	__tablename__ = 'product'
 
 	id = Column(Integer, primary_key=True, index=True)
-	name = Column(String(200))
+	name = Column(String(200), nullable=False)
+	racks = relationship("Rack", backref="rack")
+	orders = relationship("Order", backref="order")
 
 
 class Order(Base):
@@ -25,20 +26,17 @@ class Order(Base):
 
 	id = Column(Integer, primary_key=True, index=True)
 	product_id = Column(Integer, ForeignKey('product.id'))
-	quantity = Column(Integer)
-	# id_product = relationship("Product", backref="product")
-	# tasks = relationship("Task", backref="status")
+	quantity = Column(Integer, nullable=False)
 
 
-class Task(Base):
-	__tablename__ = 'task'
+class Rack(Base):
+	__tablename__ = 'rack'
 
 	id = Column(Integer, primary_key=True, index=True)
 	name = Column(String(100), nullable=False)
-	desc = Column(Text, nullable=True)
-	create_time = Column(DateTime, default=datetime.now)
-	update_time = Column(DateTime, default=datetime.now, onupdate=datetime.now)
-	status_id = Column(Integer, ForeignKey('status.id'))
+	product_id = Column(Integer, ForeignKey('product.id'))
+	quantity = Column(Integer, nullable=False)
 
 
-SessionLocal = sessionmaker(autoflush=False, bind=engine)
+Base.metadata.create_all(bind=engine)
+print("База данных и таблица созданы")
