@@ -25,6 +25,7 @@ class Order(Base):
 	__tablename__ = 'order'
 
 	id = Column(Integer, primary_key=True, index=True)
+	num_order = Column(Integer, nullable=False)
 	product_id = Column(Integer, ForeignKey('product.id'))
 	quantity = Column(Integer, nullable=False)
 
