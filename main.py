@@ -11,6 +11,8 @@ conn = psycopg2.connect(
 
 cursor = conn.cursor()
 
+num_list = input("Введите список заказов, разделенных пробелом: ").split()
+
 try:
     # cursor.execute('insert into product (name) values ('ноутбук'),('монитор'),('телефон'),('системный блок'),('часы'),('микрофон')')
     # conn.commit() 
@@ -30,9 +32,18 @@ try:
     # conn.commit()
     
     
-    cursor.execute('SELECT * FROM rack')
-    row = cursor.fetchall()
-    print(row)
+    # cursor.execute('SELECT * FROM rack')
+    # row = cursor.fetchall()
+    # print(row)
+    num_list = list(map(int, num_list))
+    print("Страница сборки заказов: ", num_list)
+    for i in num_list:
+        # print(i)
+        cursor.execute(f'SELECT num_order, product_id, quantity FROM "order" WHERE num_order={i}')
+        row = cursor.fetchall()
+        print(row)
+        
+    
 except Exception as error:
     print("Ошибка ", error)
 finally:
