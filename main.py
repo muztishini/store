@@ -31,16 +31,39 @@ try:
     # cursor.execute("insert into rack (name, product_id, quantity) values ('F', 5, 100)")
     # conn.commit()
        
-    # cursor.execute('SELECT * FROM rack')
-    # row = cursor.fetchall()
-    # print(row)
-    num_list = list(map(int, num_list))
+    num_list = list(map(int, num_list))  
     print("Страница сборки заказов: ", num_list)
-    for i in num_list:
-        cursor.execute(f'SELECT num_order, product_id, quantity FROM "order" WHERE num_order={i}')
-        row = cursor.fetchall()
-        print(row)
-           
+    
+    cursor.execute(f"SELECT name, product_id FROM rack WHERE name='A' OR name='B' OR name='C'")
+    racks = cursor.fetchall()    
+    result_dict = {}
+    for key, value in racks:
+        if key in result_dict:
+            result_dict[key].append(value)
+        else:
+            result_dict[key] = [value]
+    result_list = [(key, value) for key, value in result_dict.items()]   
+    for item in result_list:
+        rack_name = item[0]
+        print(f"===Стеллаж {rack_name}")
+        for prod in item[1]:
+            cursor.execute(f'SELECT num_order, product_id, quantity FROM "order" WHERE product_id={prod}')
+            row = cursor.fetchall()
+            for r in row:
+                if r[0] in num_list:
+                    cursor.execute(f'SELECT name FROM product WHERE id={r[1]}')
+                    name_prod = cursor.fetchone()[0]
+                    print(f"{name_prod} (id={r[1]})")
+                    print(f"заказ {r[0]}, {r[2]} шт")                
+                    cursor.execute(f"SELECT name FROM rack WHERE product_id={r[1]} AND name!='A' AND name!='B' AND name!='C'")
+                    dop_racks = cursor.fetchall()
+                    if dop_racks != []:
+                        dr = ""
+                        for i in dop_racks:
+                            dr += f"{i[0]},"                    
+                        print(f"доп стеллаж: {dr}")
+                    print(" ")
+                
 except Exception as error:
     print("Ошибка ", error)
 finally:
