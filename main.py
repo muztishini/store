@@ -37,7 +37,6 @@ try:
     num_list = list(map(int, num_list))
     print("Страница сборки заказов: ", num_list)
     for i in num_list:
-        # print(i)
         cursor.execute(f'SELECT num_order, product_id, quantity FROM "order" WHERE num_order={i}')
         row = cursor.fetchall()
         print(row)
