@@ -40,8 +40,7 @@ try:
         cursor.execute(f'SELECT num_order, product_id, quantity FROM "order" WHERE num_order={i}')
         row = cursor.fetchall()
         print(row)
-        
-    
+           
 except Exception as error:
     print("Ошибка ", error)
 finally:
