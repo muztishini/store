@@ -30,8 +30,7 @@ try:
     # cursor.execute("insert into rack (name, product_id, quantity) values ('E', 3, 100)")
     # cursor.execute("insert into rack (name, product_id, quantity) values ('F', 5, 100)")
     # conn.commit()
-    
-    
+       
     # cursor.execute('SELECT * FROM rack')
     # row = cursor.fetchall()
     # print(row)
